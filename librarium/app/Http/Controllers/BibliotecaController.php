@@ -46,9 +46,9 @@ class BibliotecaController extends Controller
             'rol' => MiembroRol::PROPIETARIO
         ]);
 
-        return redirect()
-            ->route('bibliotecas.show', $biblioteca)
-            ->with('success', 'Biblioteca creada exitosamente.');
+        return Inertia::location(
+            route('bibliotecas.show', ['biblioteca' => $biblioteca->idBiblioteca])
+        );
     }
 
     public function index()
@@ -94,6 +94,8 @@ class BibliotecaController extends Controller
 
         $ids = $libros->pluck('idLibro')->all();
 
+        $estadoPorLibro = [];
+
         if (!empty($ids)) {
             $lecturas = Lectura::query()
                 ->select('idLibro', 'estado', 'fechaInicio', 'fechaFin')
@@ -101,8 +103,6 @@ class BibliotecaController extends Controller
                 ->whereIn('idLibro', $ids)
                 ->orderByDesc('fechaInicio')
                 ->get();
-
-            $estadoPorLibro = [];
 
             foreach ($lecturas as $lectura) {
                 $id = $lectura->idLibro;
@@ -116,20 +116,20 @@ class BibliotecaController extends Controller
                 } elseif (!isset($estadoPorLibro[$id]) && $lectura->estado === EstadoLectura::ABANDONADO) {
                     $estadoPorLibro[$id] = EstadoLectura::ABANDONADO->value;
                 }
-
-                $libros = $libros->map(function ($libro) use ($estadoPorLibro) {
-                    $libro->estadoLectura = $estadoPorLibro[$libro->idLibro] ?? null;
-                    return $libro;
-                });
             }
-
-            return Inertia::render('Bibliotecas/Show', [
-                'biblioteca' => $biblioteca,
-                'miembros' => $biblioteca->miembros()->with('usuario')->get(),
-                'libros' => $libros,
-                'rol' => $miembro->rol
-            ]);
         }
+
+        $libros = $libros->map(function ($libro) use ($estadoPorLibro) {
+            $libro->estadoLectura = $estadoPorLibro[$libro->idLibro] ?? null;
+            return $libro;
+        });
+
+        return Inertia::render('Bibliotecas/Show', [
+            'biblioteca' => $biblioteca,
+            'miembros' => $biblioteca->miembros()->with('usuario')->get(),
+            'libros' => $libros,
+            'rol' => $miembro->rol
+        ]);
     }
 
     public function edit(Biblioteca $biblioteca)

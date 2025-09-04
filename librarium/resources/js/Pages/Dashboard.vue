@@ -17,13 +17,10 @@ function formatAutores(autores) {
     <Head title="Panel" />
 
     <AuthenticatedLayout>
-        <!-- Contenedor responsive + grid 12 cols en >=lg -->
         <div
             class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6"
         >
-            <!-- Panel principal -->
             <div class="lg:col-span-8 xl:col-span-9">
-                <!-- Sección Bibliotecas -->
                 <section class="mb-8">
                     <h2
                         class="text-xl md:text-2xl text-brandblue font-semibold mb-4 dark:text-white"
@@ -46,7 +43,6 @@ function formatAutores(autores) {
                     </div>
 
                     <div v-else>
-                        <!-- Grid responsive de bibliotecas -->
                         <div
                             class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4"
                         >
@@ -81,7 +77,6 @@ function formatAutores(autores) {
                     </div>
                 </section>
 
-                <!-- Sección Lecturas -->
                 <section>
                     <h2
                         class="text-xl md:text-2xl text-brandblue font-semibold mb-4 dark:text-white"
@@ -104,7 +99,6 @@ function formatAutores(autores) {
                     </div>
 
                     <div v-else>
-                        <!-- Grid de tarjetas de lectura -->
                         <div
                             class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4"
                         >
@@ -113,7 +107,6 @@ function formatAutores(autores) {
                                 :key="it.idLectura"
                                 class="rounded-xl overflow-hidden bg-white/40 dark:bg-white/5"
                             >
-                                <!-- Wrapper con relación de aspecto fija 2/3 -->
                                 <div
                                     class="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
                                 >

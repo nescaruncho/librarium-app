@@ -7,17 +7,14 @@ const props = defineProps({
   id: { type: String, default: undefined },
 })
 
-// emit estándar v-model
 const emit = defineEmits(['update:modelValue'])
 
 const input = ref(null)
 
-// Si el input tiene el atributo `autofocus`, enfocamos al montar
 onMounted(() => {
   if (input.value?.hasAttribute('autofocus')) input.value.focus()
 })
 
-// 👇 Exponemos métodos al padre (ahora passwordInput.value.focus() existe)
 defineExpose({
   focus() {
     input.value?.focus()

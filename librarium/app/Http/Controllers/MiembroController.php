@@ -17,7 +17,6 @@ class MiembroController extends Controller
 
         $biblioteca = Biblioteca::findOrFail($idBiblioteca);
 
-        // Verificar si el usuario ya es miembro de la biblioteca
         $existe = Miembro::where('idUsuario', $usuario->idUsuario)
             ->where('idBiblioteca', $idBiblioteca)
             ->exists();
@@ -85,14 +84,12 @@ class MiembroController extends Controller
             ->where('idBiblioteca', $idBiblioteca)
             ->firstOrFail();
 
-        // Verificar si el usuario es miembro de la biblioteca
         if (!$miembro) {
             return response()->json([
                 'message' => 'No eres miembro de esta biblioteca.'
             ], 404);
         }
 
-        // Verificar si el usuario es el propietario de la biblioteca
         if ($miembro->rol === MiembroRol::PROPIETARIO) {
             return response()->json([
                 'message' => 'No puedes abandonar la biblioteca porque eres el propietario.'
@@ -116,7 +113,6 @@ class MiembroController extends Controller
             ->where('idBiblioteca', $idBiblioteca)
             ->firstOrFail();
 
-        // Verificar si el usuario tiene permisos para actualizar roles
         if ($miembro->rol === MiembroRol::LECTOR) {
             return response()->json([
                 'message' => 'No tienes permiso para actualizar los roles de los miembros.'
@@ -127,7 +123,6 @@ class MiembroController extends Controller
             ->where('idBiblioteca', $idBiblioteca)
             ->firstOrFail();
 
-        // Verificar si el miembro a actualizar es el propietario
         if ($miembroAActualizar->rol === MiembroRol::PROPIETARIO) {
             return response()->json([
                 'message' => 'No puedes actualizar el rol del propietario.'
@@ -136,7 +131,6 @@ class MiembroController extends Controller
 
         $nuevoRol = $miembroAActualizar->rol === MiembroRol::ADMIN ? MiembroRol::LECTOR : MiembroRol::ADMIN;
 
-        // Actualizar el rol del miembro
         $miembroAActualizar->rol = $nuevoRol;
         $miembroAActualizar->save();
 

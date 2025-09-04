@@ -85,7 +85,6 @@ class LibroController extends Controller
 
         $query = $request->input('query');
 
-        // Si la consulta es muy corta, no buscar
         if (strlen($query) < 2) {
             return response()->json(['libros' => []], 200);
         }
@@ -127,12 +126,10 @@ class LibroController extends Controller
             ];
         }
 
-        // Para peticiones AJAX (búsqueda dinámica)
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['libros' => $libros]);
         }
 
-        // Para peticiones normales (si se navega directamente a la URL)
         return Inertia::render('Bibliotecas/SearchResults', [
             'biblioteca' => $biblioteca,
             'rol' => $miembro->rol,

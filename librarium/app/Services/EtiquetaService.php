@@ -26,7 +26,6 @@ class EtiquetaService
 
         $config = $biblioteca->configuracionetiqueta;
 
-        // Si no existe configuración, usamos un formato por defecto
         if (!$config) {
             return Str::upper(Str::random(8));
         }
@@ -42,7 +41,6 @@ class EtiquetaService
 
         $separador = $config->separador ?? '-';
 
-        // Determinar longitud máxima
         $maxLength = (int) $config->longitudMaxima;
         if ($maxLength <= 0)
             $maxLength = self::LONGITUD_MAXIMA_TOTAL;
@@ -52,7 +50,6 @@ class EtiquetaService
         $sepLenTotal = max(0, strlen($separador) * ($nTokens - 1));
         $baseBudget = max(1, $maxLength - $sepLenTotal);
 
-        // Reparte caracteres por token
         $perToken = max(1, intdiv($baseBudget, $nTokens));
         $extraChars = $baseBudget % $nTokens;
 
@@ -110,26 +107,23 @@ class EtiquetaService
 
     protected function resolverColision(string $etiquetaBase, int $idBiblioteca, string $separador, int $maxLength): string
     {
-        $etiqueta = $etiquetaBase === '' ? 'X' : $etiquetaBase; // micro-guard por si llega vacía
+        $etiqueta = $etiquetaBase === '' ? 'X' : $etiquetaBase;
         $contador = 2;
 
-        // Verificamos si existe colisión
         if (
             !Ejemplar::where('idBiblioteca', $idBiblioteca)
                 ->where('etiqueta', $etiqueta)
                 ->exists()
         ) {
-            return $etiqueta; // No hay colisión, retornamos la etiqueta original
+            return $etiqueta;
         }
 
-        // Si hay colisión, preparamos para agregar sufijo
         $contador = 2;
 
         do {
             $sufijo = $separador . $contador;
             $etiquetaFinal = $etiqueta . $sufijo;
 
-            // Si excede el límite absoluto, recortamos
             if (strlen($etiquetaFinal) > self::LONGITUD_MAXIMA_TOTAL) {
                 $recortada = Str::substr($etiqueta, 0, self::LONGITUD_MAXIMA_TOTAL - strlen($sufijo));
                 $etiquetaFinal = $recortada . $sufijo;

@@ -26,7 +26,6 @@ class BookDataService
 
         $edition = $editionRes->json();
 
-        // portada: primero edición, luego work como fallback
         $portada = $this->resolveCoverUrlFromEdition($edition);
 
         $editorial = null;
@@ -38,7 +37,7 @@ class BookDataService
 
         $idiomaCodigo = null;
         if (!empty($edition['languages'][0]['key'])) {
-            $idiomaCodigo = basename($edition['languages'][0]['key']); // eng/spa/...
+            $idiomaCodigo = basename($edition['languages'][0]['key']);
         }
 
         $numeroPaginas = $edition['number_of_pages'] ?? null;
@@ -46,7 +45,7 @@ class BookDataService
         $sinopsis = null;
         $subjects = [];
         if (!empty($edition['works'][0]['key'])) {
-            $workKey = $edition['works'][0]['key']; // "/works/OLxxxxW"
+            $workKey = $edition['works'][0]['key'];
             $work = $this->fetchWork($workKey);
             if ($work) {
                 $sinopsis = $this->extractDescription($work);
@@ -62,13 +61,13 @@ class BookDataService
         return [
             'isbn'              => $isbn,
             'titulo'            => $edition['title'] ?? null,
-            'portadaUrl'        => $portada,                          // 👈 nombre de tu columna
-            'fechaPublicacion'  => $edition['publish_date'] ?? null,  // 👈 nombre de tu columna
-            'numeroPaginas'     => $numeroPaginas,                    // 👈 nombre de tu columna
+            'portadaUrl'        => $portada,
+            'fechaPublicacion'  => $edition['publish_date'] ?? null,
+            'numeroPaginas'     => $numeroPaginas,
             'editorial'         => $editorial,
             'idioma'            => $idiomaCodigo,
-            'autores'           => $autores,     // array<string>
-            'generos'           => $subjects,    // array<string>
+            'autores'           => $autores,
+            'generos'           => $subjects,
             'sinopsis'          => $sinopsis,
         ];
     }
@@ -136,7 +135,6 @@ class BookDataService
 
     public function crearLibroConRelaciones(array $d): Libro
     {
-        // Libro base (usa los nombres de TU tabla)
         $libro = Libro::create([
             'isbn'             => $d['isbn'],
             'titulo'           => $d['titulo'],
@@ -146,13 +144,11 @@ class BookDataService
             'sinopsis'         => $d['sinopsis'] ?? null,
         ]);
 
-        // Editorial
         if (!empty($d['editorial'])) {
             $editorial = Editorial::firstOrCreate(['nombre' => $d['editorial']]);
             $libro->idEditorial = $editorial->idEditorial;
         }
 
-        // Idioma (con config/idiomas.php)
         if (!empty($d['idioma'])) {
             $map = config('idiomas.map');
             $codigo = $d['idioma'];
@@ -167,7 +163,6 @@ class BookDataService
 
         $libro->save();
 
-        // Autores (pivot autorlibro)
         if (!empty($d['autores'])) {
             $ids = [];
             foreach ($d['autores'] as $fullName) {
@@ -177,11 +172,9 @@ class BookDataService
                 );
                 $ids[] = $autor->idAutor;
             }
-            // requiere que Libro tenga ->autores() belongsToMany correctamente definido
             $libro->autores()->sync($ids);
         }
 
-        // Géneros (usamos subjects como géneros) (pivot generolibro)
         if (!empty($d['generos'])) {
             $ids = [];
             foreach ($d['generos'] as $nombre) {

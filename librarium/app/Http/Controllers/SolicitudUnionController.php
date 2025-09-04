@@ -101,7 +101,6 @@ class SolicitudUnionController extends Controller
     {
         $usuario = Auth::user()->idUsuario;
 
-        // Buscar la solicitud del usuario para esta biblioteca
         $solicitud = SolicitudUnion::where('idBiblioteca', $idBiblioteca)
             ->where('idUsuario', $usuario)
             ->first();

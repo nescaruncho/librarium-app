@@ -227,11 +227,9 @@ function onEliminar(libro, e) {
         <Head :title="biblioteca.nombre" />
 
         <div class="px-8 py-6 dark:bg-black bg-white space-y-6">
-            <!-- Header -->
             <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
             >
-                <!-- Título y datos de la biblioteca -->
                 <div class="flex items-center gap-4">
                     <BibliotecaIcon
                         class="w-16 h-16 text-brandblue dark:text-white"
@@ -242,7 +240,6 @@ function onEliminar(libro, e) {
                         {{ biblioteca.nombre }}
                     </h1>
 
-                    <!-- acciones -->
                     <Link
                         v-if="rol === 'propietario'"
                         :href="
@@ -301,7 +298,6 @@ function onEliminar(libro, e) {
                     </Link>
                 </div>
 
-                <!-- CTA -->
                 <div class="flex items-center gap-2 w-full md:w-auto">
                     <Link
                         v-if="['propietario', 'admin'].includes(rol)"
@@ -317,7 +313,6 @@ function onEliminar(libro, e) {
                 </div>
             </div>
 
-            <!-- Barra de búsqueda centrada -->
             <div class="flex justify-center mt-4">
                 <div class="relative w-full max-w-4xl mx-6">
                     <div class="relative">
@@ -335,7 +330,6 @@ function onEliminar(libro, e) {
                             <X class="w-4 h-4" />
                         </button>
 
-                        <!-- Indicador de carga -->
                         <div
                             v-if="isSearching"
                             class="absolute right-10 top-1/2 -translate-y-1/2"
@@ -348,7 +342,6 @@ function onEliminar(libro, e) {
                 </div>
             </div>
 
-            <!-- Resultados de búsqueda -->
             <div
                 v-if="searchQuery.length >= 2 && showResults"
                 class="mb-4 text-center"
@@ -365,23 +358,19 @@ function onEliminar(libro, e) {
                 </p>
             </div>
 
-            <!-- Grid de libros -->
             <div
                 v-if="displayedLibros.length"
                 class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 justify-items-center"
             >
-                <!-- Libro (repite para cada libro en displayedLibros) -->
                 <div
                     v-for="libro in displayedLibros"
                     :key="libro.idLibro"
                     class="w-40 sm:w-44 text-center cursor-pointer select-none"
                     @click="goToLibro(libro.idLibro)"
                 >
-                    <!-- CARD -->
                     <div
                         class="group relative rounded-2xl overflow-hidden shadow-sm"
                     >
-                        <!-- portada -->
                         <img
                             :src="coverSrc(libro)"
                             :alt="libro.titulo"
@@ -394,12 +383,10 @@ function onEliminar(libro, e) {
                         :estado-lectura="libro.estadoLectura || null" trigger="click"
                         />
 
-                        <!-- overlay oscuro -->
                         <div
                             class="pointer-events-none absolute inset-0 rounded-2xl bg-black/0 group-hover:bg-black/40 transition"
                         />
 
-                        <!-- OJO CENTRADO -->
                         <button
                             title="Ver"
                             @click.stop="goToLibro(libro.idLibro)"
@@ -408,7 +395,6 @@ function onEliminar(libro, e) {
                             <Eye class="w-5 h-5 text-slate-800" />
                         </button>
 
-                        <!-- PAPELERA ABAJO-CENTRO -->
                         <button
                             v-if="['propietario', 'admin'].includes(rol)"
                             title="Quitar de la biblioteca"
@@ -419,7 +405,6 @@ function onEliminar(libro, e) {
                         </button>
                     </div>
 
-                    <!-- textos -->
                     <h2
                         class="mt-2 font-semibold text-brandblue dark:text-white text-base leading-snug line-clamp-2"
                     >
@@ -431,7 +416,6 @@ function onEliminar(libro, e) {
                 </div>
             </div>
 
-            <!-- Mensaje si no hay libros -->
             <div
                 v-else-if="!searchQuery || searchQuery.length < 2"
                 class="text-center py-12"

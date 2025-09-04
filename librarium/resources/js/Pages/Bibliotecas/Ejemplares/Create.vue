@@ -50,12 +50,11 @@ const form = useForm({
         </div>
 
         <div>
-          <InputLabel for="ubicacion" value="Ubicación" />
+          <InputLabel for="ubicacion" value="Ubicación (opcional)" />
           <TextInput
             id="ubicacion"
             type="text"
             v-model="form.ubicacion"
-            required
             maxlength="100"
             placeholder="Máx 100 caracteres"
             class="mt-2 w-full rounded-full px-6 py-3 border focus:ring-2 focus:ring-offset-0"

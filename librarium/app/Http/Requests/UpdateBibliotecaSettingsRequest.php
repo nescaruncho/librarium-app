@@ -94,7 +94,6 @@ class UpdateBibliotecaSettingsRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Convertir los valores booleanos a enteros para la validación
         $this->merge([
             'prestamosHabilitados' => filter_var($this->prestamosHabilitados, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
             'etiquetasHabilitadas' => filter_var($this->etiquetasHabilitadas, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
@@ -104,12 +103,10 @@ class UpdateBibliotecaSettingsRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // Comprobación defensiva si las etiquetas están habilitadas y hay un array formato
             if ($this->boolean('etiquetasHabilitadas') && is_array($this->input('configEtiqueta.formato'))) {
                 $max = (int)($this->input('configEtiqueta.longitudMaxima', 12));
                 $campos = $this->input('configEtiqueta.formato', []);
 
-                // Regla: longitud max vs campos min
                 if (
                     ($max >= 6 && count($campos) < 2) ||
                     ($max >= 9 && count($campos) < 3) ||

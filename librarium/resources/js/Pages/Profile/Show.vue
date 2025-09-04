@@ -88,14 +88,25 @@ function toggleEdit() {
 function saveProfile() {
     form.patch(route("profile.update"), {
         preserveScroll: true,
-        onSuccess: () => {
+        onSuccess: (page) => {
             editMode.value = false;
-            window.location.href = route("profile.show");
+            // Actualizar los datos del usuario local con los nuevos datos
+            Object.assign(user, {
+                nombre: form.nombre,
+                apellido1: form.apellido1,
+                apellido2: form.apellido2,
+                username: form.username,
+                descripcion: form.descripcion,
+                ciudad: form.ciudad,
+                fechaNacimiento: form.fechaNacimiento,
+                genero: form.genero
+            });
         },
+        onError: (errors) => {
+            console.log('Error al guardar:', errors);
+        }
     });
-}
-
-const getFullName = () => {
+}const getFullName = () => {
     return [user.nombre, user.apellido1, user.apellido2]
         .filter(Boolean)
         .join(" ");

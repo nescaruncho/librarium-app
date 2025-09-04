@@ -292,7 +292,7 @@ class NotificacionService
         $admins = $biblioteca->miembros()
             ->whereIn('rol', [MiembroRol::ADMIN->value, MiembroRol::PROPIETARIO->value])
             ->pluck('idUsuario')
-            ->all(); // array plano
+            ->all();
 
         if (empty($admins)) {
             \Log::warning('[Noti] Sin destinatarios (admins/propietarios) para bibliotea', ['bib' => $idBiblioteca]);
@@ -314,7 +314,7 @@ class NotificacionService
         $admins = $biblioteca->miembros()
             ->whereIn('rol', [MiembroRol::ADMIN->value, MiembroRol::PROPIETARIO->value])
             ->pluck('idUsuario')
-            ->all(); // array plano
+            ->all();
 
         if (empty($admins)) {
             \Log::warning('[Noti] Sin destinatarios (admins/propietarios) para bibliotea', ['bib' => $idBiblioteca]);
@@ -336,7 +336,7 @@ class NotificacionService
         $admins = $biblioteca->miembros()
             ->whereIn('rol', [MiembroRol::ADMIN->value, MiembroRol::PROPIETARIO->value])
             ->pluck('idUsuario')
-            ->all(); // array plano
+            ->all();
 
         $this->crearParaMuchos(
             $admins,
@@ -384,7 +384,7 @@ class NotificacionService
         $admins = $biblioteca->miembros()
             ->whereIn('rol', [MiembroRol::ADMIN->value, MiembroRol::PROPIETARIO->value])
             ->pluck('idUsuario')
-            ->all(); // array plano
+            ->all();
 
         if (empty($admins)) {
             \Log::warning('[Noti] Sin destinatarios (admins/propietarios) para bibliotea', ['bib' => $idBiblioteca]);

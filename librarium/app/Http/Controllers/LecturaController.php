@@ -17,7 +17,6 @@ class LecturaController extends Controller
     public function index(Request $r)
     {
         $estado = $r->string('estado')->toString();
-        // Solo permitimos estos dos en la vista
         $permitidos = [EstadoLectura::LEYENDO->value, EstadoLectura::COMPLETADO->value];
 
         $q = Lectura::query()

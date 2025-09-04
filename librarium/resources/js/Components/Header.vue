@@ -41,7 +41,6 @@ const handleKeyPress = (e) => { if (e.key === "Enter") handleSearch(); };
   <header
     class="fixed top-0 left-0 lg:left-64 right-0 z-30 flex items-center justify-between px-4 sm:px-6 py-4 bg-white dark:bg-[#272727] shadow-md"
   >
-    <!-- Hamburguesa (solo móvil/tablet) -->
     <div class="flex items-center gap-3">
       <button
         class="lg:hidden p-2 rounded-md ring-1 ring-[#142A47]/20 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -54,7 +53,6 @@ const handleKeyPress = (e) => { if (e.key === "Enter") handleSearch(); };
         </svg>
       </button>
 
-      <!-- Toggle tema -->
       <button
         @click="toggleTheme"
         class="relative w-12 h-6 rounded-full px-1 flex items-center transition bg-gray-200 dark:bg-gray-600 ring-1 ring-[#142A47]/30 focus:outline-none focus-visible:ring-2"
@@ -71,7 +69,6 @@ const handleKeyPress = (e) => { if (e.key === "Enter") handleSearch(); };
       </button>
     </div>
 
-    <!-- Buscador -->
     <div class="flex-1 mx-3 sm:mx-6 relative">
       <input
         type="text"
@@ -87,7 +84,6 @@ const handleKeyPress = (e) => { if (e.key === "Enter") handleSearch(); };
       </button>
     </div>
 
-    <!-- Iconos -->
     <div class="flex items-center space-x-6 text-[#142A47] dark:text-white">
       <NotifBell />
       <Link href="/profile" class="hover:text-yellow-500 transition" aria-label="Perfil">

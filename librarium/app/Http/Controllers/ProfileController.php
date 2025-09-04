@@ -56,6 +56,7 @@ class ProfileController extends Controller
          * @var  \App\Models\Usuario $user
          */
         $user = Auth::user();
+
         $user->update([
             'username' => $request->username,
             'nombre' => $request->nombre,
@@ -68,9 +69,7 @@ class ProfileController extends Controller
         ]);
 
         return Redirect::route('profile.show')->with('status', 'profile-updated');
-    }
-
-    public function updateEmail(EmailUpdateRequest $request): RedirectResponse
+    }    public function updateEmail(EmailUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
 

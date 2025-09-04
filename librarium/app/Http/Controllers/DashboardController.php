@@ -28,8 +28,8 @@ class DashboardController extends Controller
             ->values();
 
         $lecturas = $usuario->lecturas()
-            ->where('estado', \App\Enums\EstadoLectura::LEYENDO) // ajusta si tu enum se llama así
-            ->latest('fechaInicio') // o updated_at si prefieres
+            ->where('estado', \App\Enums\EstadoLectura::LEYENDO)
+            ->latest('fechaInicio')
             ->take(4)
             ->with('libro.autores')
             ->get()
@@ -41,7 +41,7 @@ class DashboardController extends Controller
                     'libro' => [
                         'idLibro' => $libro->idLibro,
                         'titulo' => $libro->titulo,
-                        'portadaUrl' => $libro->portadaUrl, // ya está en la tabla libro
+                        'portadaUrl' => $libro->portadaUrl,
                         'autores' => $libro->autores->map(fn($a) => [
                             'nombre' => $a->nombre,
                             'apellido1' => $a->apellido1,
@@ -55,7 +55,7 @@ class DashboardController extends Controller
                 'username' => $usuario->username,
             ],
             'bibliotecas' => $bibliotecas,
-            'lecturas' => $lecturas, // 👈 ya filtradas
+            'lecturas' => $lecturas,
         ]);
     }
 }

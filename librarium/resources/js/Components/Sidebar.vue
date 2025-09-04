@@ -24,24 +24,18 @@ onMounted(() => {
 <template>
   <aside
     :class="[
-      // mobile drawer
       open ? 'translate-x-0' : '-translate-x-full',
-      // base
       'fixed top-0 left-0 h-screen w-64 bg-brandblue text-white dark:bg-[#272727] z-50',
       'transition-transform duration-300 ease-in-out',
-      // layout interior
       'flex flex-col justify-between py-8 px-6',
-      // en desktop siempre visible y sin animación
       'lg:translate-x-0 lg:flex'
     ]"
     role="dialog"
     aria-label="Navegación lateral"
   >
-    <!-- Logo + nav -->
     <div class="flex flex-col items-center space-y-8">
       <component :is="isDark ? SidebarLogoDark : SidebarLogo" class="w-32 h-32" />
 
-      <!-- Botón cerrar (solo móvil) -->
       <button
         class="self-end lg:hidden rounded-md px-3 py-1 text-sm bg-white/10 hover:bg-white/20"
         @click="emit('close')"
@@ -56,7 +50,6 @@ onMounted(() => {
       </nav>
     </div>
 
-    <!-- Enlaces legales -->
     <div class="space-y-4 text-sm font-regular text-white/90">
       <ul>
         <li class="mb-2"><Link href="/aviso" class="hover:underline" @click="emit('close')">Aviso legal</Link></li>

@@ -22,17 +22,10 @@ class ProfileUpdateRequest extends FormRequest
                 'max:30',
                 Rule::unique(Usuario::class)->ignore($this->user()->idUsuario, 'idUsuario'),
             ],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'max:255',
-                Rule::unique(Usuario::class)->ignore($this->user()->idUsuario, 'idUsuario'),
-            ],
             'nombre' => 'required|string|max:50',
             'apellido1' => 'required|string|max:50',
             'apellido2' => 'nullable|string|max:50',
-            'fecha_nacimiento' => 'nullable|date',
+            'fechaNacimiento' => 'nullable|date',
             'genero' => [
                 'nullable',
                 'string',
@@ -40,13 +33,6 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'ciudad' => 'nullable|string|max:100',
             'descripcion' => 'nullable|string|max:500',
-            'privacidad' => 'boolean',
-            'notifEmail' => 'boolean',
-            'temaDef' => [
-                'nullable',
-                'string',
-                Rule::in(['light', 'dark']),
-            ],
         ];
     }
 }

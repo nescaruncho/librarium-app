@@ -43,7 +43,6 @@ const marcarLeido = (idLibro) =>
     );
 
 const marcarLeyendo = async (idLibro) => {
-    // si vienes de Leídos, confirmar
     if (props.estado === "completado") {
         const r = await Swal.fire({
             title: "¿Volver a leer?",
@@ -112,7 +111,6 @@ const abandonar = async (idLibro) => {
         <Head :title="estado === 'leyendo' ? 'Leyendo' : 'Leídos'" />
 
         <div class="px-8 py-6 space-y-6">
-            <!-- Tabs -->
             <div class="flex gap-2">
                 <Link
                     :href="route('lecturas.leyendo')"
@@ -136,7 +134,6 @@ const abandonar = async (idLibro) => {
                 >
             </div>
 
-            <!-- Search -->
             <div class="max-w-3xl">
                 <input
                     v-model="search"
@@ -146,7 +143,6 @@ const abandonar = async (idLibro) => {
                 />
             </div>
 
-            <!-- Grid -->
             <div
                 v-if="filtered.length"
                 class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
@@ -209,7 +205,6 @@ const abandonar = async (idLibro) => {
                 No hay libros en esta sección.
             </div>
 
-            <!-- Paginación -->
             <div
                 v-if="props.lecturas?.links?.length"
                 class="flex flex-wrap gap-2 justify-center"

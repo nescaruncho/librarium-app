@@ -30,6 +30,11 @@ class EjemplarController extends Controller
 
 public function store(Request $request, $idBiblioteca, BookDataService $bookDataService, EtiquetaService $etiquetaService, NotificacionService $notificacionService)
 {
+    Log::info('[EjemplarController] Iniciando store', [
+        'idBiblioteca' => $idBiblioteca,
+        'request_data' => $request->all()
+    ]);
+
     $biblioteca = Biblioteca::with('configuracionetiqueta')->findOrFail($idBiblioteca);
     $this->verificarPermisos($biblioteca);
 
@@ -38,16 +43,25 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
         'ubicacion' => 'nullable|string',
     ]);
 
+    Log::info('[EjemplarController] Datos validados', ['validated' => $validated]);
+
     return DB::transaction(function () use ($validated, $biblioteca, $bookDataService, $etiquetaService, $notificacionService, $idBiblioteca) {
 
         $isbn  = $validated['isbn'];
+        Log::info('[EjemplarController] Buscando libro con ISBN', ['isbn' => $isbn]);
+
         $libro = Libro::where('isbn', $isbn)->first();
 
         if (!$libro) {
+            Log::info('[EjemplarController] Libro no encontrado, creando nuevo');
             $libro = $bookDataService->obtenerOLibro($isbn);
             if (!$libro) {
+                Log::error('[EjemplarController] No se pudo obtener libro del servicio');
                 return back()->withErrors(['isbn' => 'No se ha encontrado ningún libro con ese ISBN']);
             }
+            Log::info('[EjemplarController] Libro creado', ['libro_id' => $libro->idLibro]);
+        } else {
+            Log::info('[EjemplarController] Libro encontrado', ['libro_id' => $libro->idLibro]);
         }
 
         $libro->loadMissing(['autores', 'generos', 'editorial', 'idioma']);
@@ -55,10 +69,19 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
         $etiqueta = null;
         if ($biblioteca->etiquetasHabilitadas) {
             if (!$biblioteca->configuracionetiqueta || empty($biblioteca->configuracionetiqueta->formato)) {
+                Log::error('[EjemplarController] Configuración de etiquetas incorrecta');
                 return back()->withErrors(['error' => 'Para generar etiquetas, configura el formato en la biblioteca.']);
             }
             $etiqueta = $etiquetaService->generarEtiqueta($libro, $biblioteca);
+            Log::info('[EjemplarController] Etiqueta generada', ['etiqueta' => $etiqueta]);
         }
+
+        Log::info('[EjemplarController] Creando ejemplar', [
+            'idLibro' => $libro->idLibro,
+            'idBiblioteca' => $idBiblioteca,
+            'ubicacion' => $validated['ubicacion'] ?? null,
+            'etiqueta' => $etiqueta
+        ]);
 
         $ejemplar = Ejemplar::create([
             'idLibro'      => $libro->idLibro,
@@ -71,6 +94,8 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
         Log::info('[Ejemplar creado]', ['id' => $ejemplar?->idEjemplar, 'attrs' => $ejemplar?->toArray()]);
 
         $notificacionService->libroBibliotecaCreado($libro->idLibro, $idBiblioteca);
+
+        Log::info('[EjemplarController] Proceso completado exitosamente');
 
         return redirect()
             ->route('bibliotecas.show', $idBiblioteca)
@@ -130,7 +155,6 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
             'disponible' => 'boolean',
         ]);
 
-        // Actualizar el ejemplar
         $ejemplar->update($request->only('ubicacion', 'disponible'));
 
         return redirect()->route('bibliotecas.show', $idBiblioteca)
@@ -142,7 +166,6 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
         $biblioteca = Biblioteca::findOrFail($idBiblioteca);
         $this->verificarPermisos($biblioteca);
 
-        // Eliminar el ejemplar
         $ejemplar->delete();
 
         return redirect()->route('libros.showEnBiblioteca', [
@@ -158,7 +181,7 @@ public function store(Request $request, $idBiblioteca, BookDataService $bookData
         $miembro = $biblioteca->miembros()->where('idUsuario', $usuarioId)->first();
 
         if (!$miembro || $miembro->rol == MiembroRol::LECTOR) {
-            return redirect()->back()->with('error', 'No tienes permiso para realizar esta acción.');
+            abort(403, 'No tienes permiso para realizar esta acción.');
         }
 
         return $miembro;
